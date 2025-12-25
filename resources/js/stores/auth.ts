@@ -80,7 +80,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function loginAdmin(username: string, pass: string) {
-        if (username !== 'aymen') {
+        if (username !== 'admin') {
             throw new Error('Invalid username');
         }
 

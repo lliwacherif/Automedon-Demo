@@ -211,16 +211,19 @@ CREATE POLICY "Allow public delete of contracts" ON storage.objects
   FOR DELETE USING (bucket_id = 'contracts');
 
 -- ================================================================
--- 8. DEFAULT ADMIN PASSWORD (password: admin123)
+-- 8. DEFAULT ADMIN CREDENTIALS (username: admin, password: admin)
 -- ================================================================
+-- SHA-256 hash of 'admin' = 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
 INSERT INTO public.admin_settings (id, password_hash)
-VALUES (1, '$2a$10$rQEY1f0kOl7qKL0VDvGY/ePr1WqX8.HV9n0bGqvKaOo0HrJOvxCPa')
+VALUES (1, '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918')
 ON CONFLICT (id) DO UPDATE SET password_hash = EXCLUDED.password_hash;
 
 -- ================================================================
 -- SETUP COMPLETE!
 -- ================================================================
--- Default admin password: admin123
--- You can change this from the Settings page after logging in
+-- Default admin credentials:
+--   Username: admin
+--   Password: admin
+-- You can change the password from the Settings page after logging in
 -- ================================================================
 
