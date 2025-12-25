@@ -1,0 +1,1 @@
+function r(t){if(!t)return"-";const i=new Date(t);return new Intl.DateTimeFormat("fr-FR",{day:"2-digit",month:"2-digit",year:"2-digit"}).format(i)}function e(t){if(!t)return"-";const i=new Date(t);return new Intl.DateTimeFormat("fr-FR",{day:"2-digit",month:"2-digit",year:"2-digit",hour:"2-digit",minute:"2-digit"}).format(i)}export{e as a,r as f};
