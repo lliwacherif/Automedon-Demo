@@ -24,6 +24,9 @@ const reservations = ref<Reservation[]>([]);
 const maintenanceRecords = ref<Maintenance[]>([]);
 const loading = ref(true);
 
+const filterStartDate = ref('');
+const filterEndDate = ref('');
+
 onMounted(async () => {
     await fetchData();
 });
@@ -74,12 +77,31 @@ const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('fr-TN', { style: 'currency', currency: 'TND' }).format(amount);
 };
 
+const dateInRange = (dateStr: string) => {
+    if (!filterStartDate.value && !filterEndDate.value) return true;
+    const date = new Date(dateStr);
+    const start = filterStartDate.value ? new Date(filterStartDate.value) : null;
+    const end = filterEndDate.value ? new Date(filterEndDate.value) : null;
+
+    if (start && date < start) return false;
+    if (end && date > end) return false;
+    return true;
+};
+
+const filteredReservations = computed(() => {
+    return reservations.value.filter(res => dateInRange(res.start_date));
+});
+
+const filteredMaintenance = computed(() => {
+    return maintenanceRecords.value.filter(rec => dateInRange(rec.maintenance_date));
+});
+
 const grandTotal = computed(() => {
-    return reservations.value.reduce((sum, res) => sum + (res.total_price || 0), 0);
+    return filteredReservations.value.reduce((sum, res) => sum + (res.total_price || 0), 0);
 });
 
 const totalMaintenanceCost = computed(() => {
-    return maintenanceRecords.value.reduce((sum, rec) => sum + (rec.cost || 0), 0);
+    return filteredMaintenance.value.reduce((sum, rec) => sum + (rec.cost || 0), 0);
 });
 
 const netRevenue = computed(() => {
@@ -90,11 +112,30 @@ const netRevenue = computed(() => {
 <template>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" v-if="!loading && car">
         <!-- Back Button -->
-        <div class="mb-6">
+        <div class="mb-6 flex justify-between items-center">
             <RouterLink to="/admin/history" class="flex items-center text-sm text-gray-500 hover:text-gray-700">
                 <ArrowLeft class="w-4 h-4 mr-1" />
                 {{ t('admin.history.back_to_list') }}
             </RouterLink>
+
+            <!-- Date Filters -->
+            <div class="flex items-center space-x-4 bg-white p-3 rounded-lg shadow-sm border border-gray-200">
+                <div class="flex items-center space-x-2">
+                    <label class="text-sm font-medium text-gray-700">Du:</label>
+                    <input type="date" v-model="filterStartDate" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                </div>
+                <div class="flex items-center space-x-2">
+                    <label class="text-sm font-medium text-gray-700">Au:</label>
+                    <input type="date" v-model="filterEndDate" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                </div>
+                <button 
+                    v-if="filterStartDate || filterEndDate"
+                    @click="filterStartDate = ''; filterEndDate = ''"
+                    class="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                >
+                    Réinitialiser
+                </button>
+            </div>
         </div>
 
         <!-- Car Header Card -->
@@ -103,7 +144,6 @@ const netRevenue = computed(() => {
                 <div>
                     <h3 class="text-2xl font-bold leading-6 text-gray-900 flex items-center gap-2">
                         {{ car.brand }} {{ car.model }} 
-                        <!-- Note: 'make' was used in previous code but type seems to use 'brand' in other files, checking type usage from context -->
                     </h3>
                     <p class="mt-1 text-sm text-gray-500 flex items-center gap-2">
                         <span class="bg-gray-100 px-2 py-0.5 rounded text-gray-700 font-mono">{{ car.license_plate }}</span>
@@ -153,7 +193,7 @@ const netRevenue = computed(() => {
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 bg-white">
-                            <tr v-for="res in reservations" :key="res.id">
+                            <tr v-for="res in filteredReservations" :key="res.id">
                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                     {{ res.client_name }}
                                 </td>
@@ -164,7 +204,7 @@ const netRevenue = computed(() => {
                                     {{ formatCurrency(res.total_price) }}
                                 </td>
                             </tr>
-                            <tr v-if="reservations.length === 0">
+                            <tr v-if="filteredReservations.length === 0">
                                 <td colspan="3" class="px-3 py-8 text-center text-sm text-gray-500">
                                     {{ t('admin.history.no_reservations') }}
                                 </td>
@@ -201,7 +241,7 @@ const netRevenue = computed(() => {
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 bg-white">
-                            <tr v-for="rec in maintenanceRecords" :key="rec.id">
+                            <tr v-for="rec in filteredMaintenance" :key="rec.id">
                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                     {{ MAINTENANCE_TYPE_LABELS[rec.maintenance_type] || rec.maintenance_type }}
                                 </td>
@@ -212,7 +252,7 @@ const netRevenue = computed(() => {
                                     {{ formatCurrency(rec.cost) }}
                                 </td>
                             </tr>
-                             <tr v-if="maintenanceRecords.length === 0">
+                             <tr v-if="filteredMaintenance.length === 0">
                                 <td colspan="3" class="px-3 py-8 text-center text-sm text-gray-500">
                                     Aucun entretien enregistré.
                                 </td>

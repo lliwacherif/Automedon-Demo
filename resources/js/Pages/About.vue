@@ -3,24 +3,33 @@
         <div class="max-w-4xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
             <!-- Header -->
             <div class="text-center mb-12">
-                <img src="/images/icon-automedon.png" alt="Automedon Logo" class="h-24 w-24 mx-auto mb-6 object-contain" />
-                <h1 class="text-4xl font-bold text-gray-900 mb-4">Automedon</h1>
-                <p class="text-xl text-gray-600">The Best Car Rental SaaS in Tunisia</p>
+                <img src="/images/miams logo.jpg" alt="MIAMS Logo" class="h-24 w-24 mx-auto mb-6 object-contain" />
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">MIAM'S Rent Car</h1>
+                <p class="text-xl text-gray-600">Agence de location de voitures a sousse tunisie</p>
+                <div class="mt-4 flex flex-col items-center justify-center space-y-2">
+                    <a href="tel:+21655200702" class="text-lg font-medium text-indigo-600 hover:text-indigo-800 flex items-center">
+                        <span class="mr-2">📞</span> +216 55 200 702
+                    </a>
+                    <a href="tel:+21655420444" class="text-lg font-medium text-indigo-600 hover:text-indigo-800 flex items-center">
+                        <span class="mr-2">📞</span> +216 55 420 444
+                    </a>
+                </div>
             </div>
 
             <!-- About Content -->
             <div class="bg-white rounded-lg shadow-md p-8 mb-8">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4">About Us</h2>
-                <p class="text-gray-600 leading-relaxed mb-6">
-                    Automedon is Tunisia's leading SaaS platform for car rental management. 
-                    We provide a comprehensive solution for rental car businesses to manage their fleet, 
-                    reservations, maintenance, and customer relationships all in one place.
-                </p>
-                <p class="text-gray-600 leading-relaxed">
-                    Our platform is designed to be simple, efficient, and powerful. 
-                    Whether you're managing a small fleet or a large rental operation, 
-                    Automedon helps you streamline your business and provide excellent service to your customers.
-                </p>
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-right">About Us</h2>
+                <div dir="rtl" class="text-right">
+                    <p class="text-gray-600 leading-relaxed mb-6 text-lg">
+                        مرحباً بكم في وكالة <strong>MIAM'S Rent Car</strong> لكراء السيارات في سوسة، تونس.
+                    </p>
+                    <p class="text-gray-600 leading-relaxed text-lg mb-4">
+                        نحن نقدم لكم أفضل الخدمات بأسعار تنافسية وأسطول سيارات حديث ومتنوع يلبي جميع احتياجاتكم.
+                    </p>
+                    <p class="text-gray-600 leading-relaxed text-lg">
+                        استمتعوا بتجربة تأجير سيارات مريحة وموثوقة معنا.
+                    </p>
+                </div>
             </div>
 
             <!-- Features -->
