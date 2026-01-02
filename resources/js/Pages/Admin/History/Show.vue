@@ -77,20 +77,21 @@ const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('fr-TN', { style: 'currency', currency: 'TND' }).format(amount);
 };
 
+const toMidnight = (dateInput: string | Date | null | undefined): Date | null => {
+    if (!dateInput) return null;
+    const date = new Date(dateInput);
+    date.setHours(0, 0, 0, 0);
+    return date;
+};
+
 const dateInRange = (startStr: string, endStr?: string) => {
     if (!filterStartDate.value && !filterEndDate.value) return true;
     
     // If it's a point-in-time event (like maintenance)
     if (!endStr) {
-        const date = new Date(startStr);
-        // Reset time part for accurate comparison
-        date.setHours(0, 0, 0, 0);
-        
-        const filterStart = filterStartDate.value ? new Date(filterStartDate.value) : null;
-        if (filterStart) filterStart.setHours(0, 0, 0, 0);
-        
-        const filterEnd = filterEndDate.value ? new Date(filterEndDate.value) : null;
-        if (filterEnd) filterEnd.setHours(0, 0, 0, 0);
+        const date = toMidnight(startStr)!;
+        const filterStart = toMidnight(filterStartDate.value);
+        const filterEnd = toMidnight(filterEndDate.value);
 
         if (filterStart && date < filterStart) return false;
         if (filterEnd && date > filterEnd) return false;
@@ -98,17 +99,10 @@ const dateInRange = (startStr: string, endStr?: string) => {
     }
 
     // Interval overlap check: (StartA <= EndB) and (EndA >= StartB)
-    const resStart = new Date(startStr);
-    resStart.setHours(0, 0, 0, 0);
-    
-    const resEnd = new Date(endStr);
-    resEnd.setHours(0, 0, 0, 0);
-
-    const filterStart = filterStartDate.value ? new Date(filterStartDate.value) : null;
-    if (filterStart) filterStart.setHours(0, 0, 0, 0);
-    
-    const filterEnd = filterEndDate.value ? new Date(filterEndDate.value) : null;
-    if (filterEnd) filterEnd.setHours(0, 0, 0, 0);
+    const resStart = toMidnight(startStr)!;
+    const resEnd = toMidnight(endStr)!;
+    const filterStart = toMidnight(filterStartDate.value);
+    const filterEnd = toMidnight(filterEndDate.value);
 
     if (filterEnd && resStart > filterEnd) return false;
     if (filterStart && resEnd < filterStart) return false;
@@ -132,31 +126,39 @@ const grandTotal = computed(() => {
 
     // Calculate revenue based on overlap with filter range
     return filteredReservations.value.reduce((sum, res) => {
-        const resStart = new Date(res.start_date);
-        resStart.setHours(0, 0, 0, 0);
+        const resStart = toMidnight(res.start_date)!;
+        const resEnd = toMidnight(res.end_date)!;
+
+        // Formula: TotalDuration = (MidnightResEnd - MidnightResStart) in days.
+        // We use Math.round to handle any floating point oddities, though differences of midnights should be clean.
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const totalDurationDays = Math.round((resEnd.getTime() - resStart.getTime()) / msPerDay);
         
-        const resEnd = new Date(res.end_date);
-        resEnd.setHours(0, 0, 0, 0);
+        // Guard against division by zero (single day or invalid range)
+        // If duration is 0 (start == end), we might consider it 1 day or handle gracefully.
+        // Assuming at least 1 day if totalDuration is 0 or less to allow price calculation.
+        const durationForRate = totalDurationDays > 0 ? totalDurationDays : 1; 
 
-        const filterStart = filterStartDate.value ? new Date(filterStartDate.value) : new Date(-8640000000000000); // Min date
-        if (filterStartDate.value) filterStart.setHours(0, 0, 0, 0);
+        // DailyRate = TotalPrice / TotalDuration.
+        const dailyRate = (res.total_price || 0) / durationForRate;
 
-        const filterEnd = filterEndDate.value ? new Date(filterEndDate.value) : new Date(8640000000000000); // Max date
-        if (filterEndDate.value) filterEnd.setHours(0, 0, 0, 0);
+        // Calculate overlap
+        const filterStart = toMidnight(filterStartDate.value) || new Date(-8640000000000000); 
+        const filterEnd = toMidnight(filterEndDate.value) || new Date(8640000000000000); 
 
         // Find overlap range
         const overlapStart = resStart < filterStart ? filterStart : resStart;
         const overlapEnd = resEnd > filterEnd ? filterEnd : resEnd;
 
-        // Calculate days
-        const diffTime = Math.abs(overlapEnd.getTime() - overlapStart.getTime());
-        const overlapDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        if (overlapStart > overlapEnd) return sum;
+
+        // Formula: OverlapDays = (MidnightOverlapEnd - MidnightOverlapStart) in days + 1.
+        const overlapDays = Math.round((overlapEnd.getTime() - overlapStart.getTime()) / msPerDay) + 1;
 
         if (overlapDays <= 0) return sum;
 
-        // Calculate revenue
-        const pricePerDay = res.price_per_day || (res.duration_days > 0 ? res.total_price / res.duration_days : 0);
-        const revenue = pricePerDay * overlapDays;
+        // Revenue = DailyRate * OverlapDays.
+        const revenue = dailyRate * overlapDays;
         
         return sum + revenue;
     }, 0);
