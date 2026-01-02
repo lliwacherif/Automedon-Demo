@@ -77,19 +77,47 @@ const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('fr-TN', { style: 'currency', currency: 'TND' }).format(amount);
 };
 
-const dateInRange = (dateStr: string) => {
+const dateInRange = (startStr: string, endStr?: string) => {
     if (!filterStartDate.value && !filterEndDate.value) return true;
-    const date = new Date(dateStr);
-    const start = filterStartDate.value ? new Date(filterStartDate.value) : null;
-    const end = filterEndDate.value ? new Date(filterEndDate.value) : null;
+    
+    // If it's a point-in-time event (like maintenance)
+    if (!endStr) {
+        const date = new Date(startStr);
+        // Reset time part for accurate comparison
+        date.setHours(0, 0, 0, 0);
+        
+        const filterStart = filterStartDate.value ? new Date(filterStartDate.value) : null;
+        if (filterStart) filterStart.setHours(0, 0, 0, 0);
+        
+        const filterEnd = filterEndDate.value ? new Date(filterEndDate.value) : null;
+        if (filterEnd) filterEnd.setHours(0, 0, 0, 0);
 
-    if (start && date < start) return false;
-    if (end && date > end) return false;
+        if (filterStart && date < filterStart) return false;
+        if (filterEnd && date > filterEnd) return false;
+        return true;
+    }
+
+    // Interval overlap check: (StartA <= EndB) and (EndA >= StartB)
+    const resStart = new Date(startStr);
+    resStart.setHours(0, 0, 0, 0);
+    
+    const resEnd = new Date(endStr);
+    resEnd.setHours(0, 0, 0, 0);
+
+    const filterStart = filterStartDate.value ? new Date(filterStartDate.value) : null;
+    if (filterStart) filterStart.setHours(0, 0, 0, 0);
+    
+    const filterEnd = filterEndDate.value ? new Date(filterEndDate.value) : null;
+    if (filterEnd) filterEnd.setHours(0, 0, 0, 0);
+
+    if (filterEnd && resStart > filterEnd) return false;
+    if (filterStart && resEnd < filterStart) return false;
+    
     return true;
 };
 
 const filteredReservations = computed(() => {
-    return reservations.value.filter(res => dateInRange(res.start_date));
+    return reservations.value.filter(res => dateInRange(res.start_date, res.end_date));
 });
 
 const filteredMaintenance = computed(() => {
@@ -97,7 +125,41 @@ const filteredMaintenance = computed(() => {
 });
 
 const grandTotal = computed(() => {
-    return filteredReservations.value.reduce((sum, res) => sum + (res.total_price || 0), 0);
+    // If no filter is active, return sum of total prices
+    if (!filterStartDate.value && !filterEndDate.value) {
+        return filteredReservations.value.reduce((sum, res) => sum + (res.total_price || 0), 0);
+    }
+
+    // Calculate revenue based on overlap with filter range
+    return filteredReservations.value.reduce((sum, res) => {
+        const resStart = new Date(res.start_date);
+        resStart.setHours(0, 0, 0, 0);
+        
+        const resEnd = new Date(res.end_date);
+        resEnd.setHours(0, 0, 0, 0);
+
+        const filterStart = filterStartDate.value ? new Date(filterStartDate.value) : new Date(-8640000000000000); // Min date
+        if (filterStartDate.value) filterStart.setHours(0, 0, 0, 0);
+
+        const filterEnd = filterEndDate.value ? new Date(filterEndDate.value) : new Date(8640000000000000); // Max date
+        if (filterEndDate.value) filterEnd.setHours(0, 0, 0, 0);
+
+        // Find overlap range
+        const overlapStart = resStart < filterStart ? filterStart : resStart;
+        const overlapEnd = resEnd > filterEnd ? filterEnd : resEnd;
+
+        // Calculate days
+        const diffTime = Math.abs(overlapEnd.getTime() - overlapStart.getTime());
+        const overlapDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+        if (overlapDays <= 0) return sum;
+
+        // Calculate revenue
+        const pricePerDay = res.price_per_day || (res.duration_days > 0 ? res.total_price / res.duration_days : 0);
+        const revenue = pricePerDay * overlapDays;
+        
+        return sum + revenue;
+    }, 0);
 });
 
 const totalMaintenanceCost = computed(() => {
