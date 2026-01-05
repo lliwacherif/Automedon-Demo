@@ -32,52 +32,81 @@
                 </div>
             </div>
 
-            <!-- Features -->
-            <div class="bg-white rounded-lg shadow-md p-8">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-6">Why Choose Automedon?</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="flex items-start space-x-3">
-                        <div class="flex-shrink-0 w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
+            <!-- New Marketing Section -->
+            <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl shadow-xl p-8 md:p-12 text-white overflow-hidden relative">
+                <!-- Decorative background elements -->
+                <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl"></div>
+
+                <div class="relative z-10 text-center space-y-8">
+                    <!-- Intro -->
+                    <div class="space-y-4">
+                        <p class="text-xl md:text-2xl font-medium text-indigo-100 animate-fade-in-up">
+                            🤔 Vous cherchez une expérience de conduite confortable et un service rapide à des prix imbattables ?
+                        </p>
+                        
+                        <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white drop-shadow-lg">
+                            ✨ MIAM's Rent a Car ✨
+                        </h2>
+                        
+                        <p class="text-lg md:text-xl text-indigo-100 max-w-3xl mx-auto leading-relaxed">
+                            Nous vous proposons les meilleures offres de location de voitures de toutes catégories, avec une qualité supérieure et un service haut de gamme pour répondre à tous vos besoins 💎
+                        </p>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="flex justify-center items-center py-4">
+                        <div class="h-px bg-indigo-300 w-24 opacity-50"></div>
+                        <span class="px-4 text-2xl">🎁 Ce que nous offrons 🎁</span>
+                        <div class="h-px bg-indigo-300 w-24 opacity-50"></div>
+                    </div>
+
+                    <!-- Features Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Car Feature -->
+                        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 hover:bg-opacity-20 transition-all duration-300 transform hover:-translate-y-1 border border-white border-opacity-20">
+                            <div class="text-4xl mb-4">🚘</div>
+                            <h3 class="text-lg font-bold mb-2">Véhicules Premium</h3>
+                            <p class="text-indigo-100 text-sm">Des voitures neuves et confortables</p>
                         </div>
-                        <div>
-                            <h3 class="font-medium text-gray-800">Easy to Use</h3>
-                            <p class="text-sm text-gray-600">Intuitive interface designed for efficiency</p>
+
+                        <!-- Price Feature -->
+                        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 hover:bg-opacity-20 transition-all duration-300 transform hover:-translate-y-1 border border-white border-opacity-20">
+                            <div class="text-4xl mb-4">💰</div>
+                            <h3 class="text-lg font-bold mb-2">Meilleurs Tarifs</h3>
+                            <p class="text-indigo-100 text-sm">Des tarifs préférentiels pour les réservations anticipées</p>
+                        </div>
+
+                        <!-- Location Feature -->
+                        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 hover:bg-opacity-20 transition-all duration-300 transform hover:-translate-y-1 border border-white border-opacity-20">
+                            <div class="text-4xl mb-4">📍</div>
+                            <h3 class="text-lg font-bold mb-2">Flexibilité</h3>
+                            <p class="text-indigo-100 text-sm">Livraison de voitures où que vous soyez</p>
+                        </div>
+
+                        <!-- Speed Feature -->
+                        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 hover:bg-opacity-20 transition-all duration-300 transform hover:-translate-y-1 border border-white border-opacity-20">
+                            <div class="text-4xl mb-4">⚡</div>
+                            <h3 class="text-lg font-bold mb-2">Rapidité</h3>
+                            <p class="text-indigo-100 text-sm">Un service virtuel rapide et efficace</p>
                         </div>
                     </div>
-                    <div class="flex items-start space-x-3">
-                        <div class="flex-shrink-0 w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="font-medium text-gray-800">Real-time Updates</h3>
-                            <p class="text-sm text-gray-600">Track your fleet status in real-time</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-3">
-                        <div class="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="font-medium text-gray-800">Analytics & KPIs</h3>
-                            <p class="text-sm text-gray-600">Detailed insights for your business</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-3">
-                        <div class="flex-shrink-0 w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="font-medium text-gray-800">Secure & Reliable</h3>
-                            <p class="text-sm text-gray-600">Your data is safe with us</p>
+
+                    <!-- Contact Section -->
+                    <div class="mt-12 bg-white rounded-2xl p-8 shadow-lg text-gray-800 transform hover:scale-[1.02] transition-transform duration-300">
+                        <h3 class="text-2xl font-bold mb-6 flex items-center justify-center gap-2">
+                            📞 Pour réserver ou pour toute information
+                        </h3>
+                        <div class="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-12">
+                            <a href="tel:+21655200702" class="group flex items-center space-x-3 text-lg font-bold text-gray-700 hover:text-indigo-600 transition-colors">
+                                <span class="bg-indigo-100 p-3 rounded-full group-hover:bg-indigo-200 transition-colors">📞</span>
+                                <span>+216 55 200 702</span>
+                            </a>
+                            <div class="hidden md:block w-px h-10 bg-gray-300"></div>
+                            <a href="tel:+21655420444" class="group flex items-center space-x-3 text-lg font-bold text-gray-700 hover:text-indigo-600 transition-colors">
+                                <span class="bg-indigo-100 p-3 rounded-full group-hover:bg-indigo-200 transition-colors">📞</span>
+                                <span>+216 55 420 444</span>
+                            </a>
                         </div>
                     </div>
                 </div>
