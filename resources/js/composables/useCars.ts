@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue';
 import { supabase } from '@/lib/supabase';
 
-export type CarBrand = 'Renault' | 'Dacia' | 'Skoda' | 'Hyundai' | 'Seat' | 'MG' | 'Mahindra' | 'Kia';
+export type CarBrand = 'Renault' | 'Dacia' | 'Skoda' | 'Hyundai' | 'Seat' | 'MG' | 'Mahindra' | 'Kia' | 'Honda' | 'Peugeot' | 'Cherry' | 'Geely';
 export type CarStatus = 'disponible' | 'loue' | 'maintenance';
 
 export interface Car {
@@ -38,7 +38,11 @@ export function useCars() {
             'Seat': [],
             'MG': [],
             'Mahindra': [],
-            'Kia': []
+            'Kia': [],
+            'Honda': [],
+            'Peugeot': [],
+            'Cherry': [],
+            'Geely': []
         };
 
         cars.value.forEach(car => {
@@ -69,31 +73,31 @@ export function useCars() {
 
         try {
             // Fetch cars
-            const { data: carsData, error: carsError } = await supabase
+            const { data: carsData, error: carsError } = await (supabase
                 .from('cars')
                 .select('id, brand, model, license_plate, status, image_url, mileage, auto_manage_status, created_at')
                 .order('brand', { ascending: true })
-                .order('model', { ascending: true });
+                .order('model', { ascending: true }) as any);
 
             if (carsError) throw carsError;
 
             // Fetch future reservations
             const now = new Date().toISOString();
-            const { data: reservationsData, error: resError } = await supabase
+            const { data: reservationsData, error: resError } = await (supabase
                 .from('reservations')
                 .select('car_id, start_date, end_date')
                 .in('status', ['confirmed', 'active'])
                 .gt('start_date', now)
-                .order('start_date', { ascending: true });
+                .order('start_date', { ascending: true }) as any);
 
             if (resError) throw resError;
 
             // Map reservations to cars
-            const mappedCars = (carsData || []).map(dbCar => {
+            const mappedCars = (carsData || []).map((dbCar: any) => {
                 const car = mapCar(dbCar);
 
                 // Find nearest future reservation for this car
-                const futureRes = reservationsData?.find(r => r.car_id === car.id);
+                const futureRes = (reservationsData || []).find((r: any) => r.car_id === car.id);
                 if (futureRes) {
                     car.next_reservation = {
                         start_date: futureRes.start_date,
@@ -118,11 +122,11 @@ export function useCars() {
         error.value = null;
 
         try {
-            const { data, error: supabaseError } = await supabase
+            const { data, error: supabaseError } = await (supabase
                 .from('cars')
                 .select('id, brand, model, license_plate, status, image_url, mileage, auto_manage_status, created_at')
                 .eq('id', id)
-                .single();
+                .single() as any);
 
             if (supabaseError) throw supabaseError;
 
@@ -182,8 +186,8 @@ export function useCars() {
             if (carData.status !== undefined) updateData.status = carData.status;
             if (carData.image_url !== undefined) updateData.image_url = carData.image_url || null;
 
-            const { data, error: supabaseError } = await supabase
-                .from('cars')
+            const { data, error: supabaseError } = await (supabase
+                .from('cars') as any)
                 .update(updateData)
                 .eq('id', id)
                 .select('id, brand, model, license_plate, status, image_url, mileage, auto_manage_status, created_at');
