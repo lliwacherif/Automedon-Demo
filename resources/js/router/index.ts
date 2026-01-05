@@ -72,7 +72,7 @@ const routes = [
         path: '/admin/kpi',
         component: () => import('../Pages/Admin/KPI/Index.vue'),
         name: 'admin.kpi.index',
-        meta: { requiresAuth: true, requiresAdmin: true }
+        meta: { requiresAuth: true, requiresAdmin: true, requiresSuperAdmin: true }
     },
     {
         path: '/admin/settings',
@@ -84,13 +84,13 @@ const routes = [
         path: '/admin/history',
         component: () => import('../Pages/Admin/History/Index.vue'),
         name: 'admin.history.index',
-        meta: { requiresAuth: true, requiresAdmin: true }
+        meta: { requiresAuth: true, requiresAdmin: true, requiresSuperAdmin: true }
     },
     {
         path: '/admin/history/:id',
         component: () => import('../Pages/Admin/History/Show.vue'),
         name: 'admin.history.show',
-        meta: { requiresAuth: true, requiresAdmin: true }
+        meta: { requiresAuth: true, requiresAdmin: true, requiresSuperAdmin: true }
     },
 
     // Client Routes
@@ -123,6 +123,11 @@ router.beforeEach(async (to, from, next) => {
 
     if (to.meta.requiresAdmin && !authStore.isAdmin) {
         next({ name: 'admin.login' })
+        return
+    }
+
+    if (to.meta.requiresSuperAdmin && authStore.role !== 'admin') {
+        next({ name: 'admin.reservations.index' }) // Redirect unauthorized admin users to reservations
         return
     }
 

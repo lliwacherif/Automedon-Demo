@@ -60,7 +60,7 @@ async function handleLogout() {
 
                         
                         <!-- Admin Links -->
-                        <RouterLink v-if="authStore.isAdmin" to="/admin/kpi" active-class="border-indigo-500 text-indigo-600" class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                        <RouterLink v-if="authStore.isAdmin && authStore.role === 'admin'" to="/admin/kpi" active-class="border-indigo-500 text-indigo-600" class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             <svg class="nav-icon w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                             </svg>
@@ -93,7 +93,7 @@ async function handleLogout() {
                             </svg>
                             <span class="nav-text">Settings</span>
                         </RouterLink>
-                        <RouterLink v-if="authStore.isAdmin" to="/admin/history" active-class="border-indigo-500 text-indigo-600" class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                        <RouterLink v-if="authStore.isAdmin && authStore.role === 'admin'" to="/admin/history" active-class="border-indigo-500 text-indigo-600" class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             <svg class="nav-icon w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <History class="w-6 h-6" />
                             </svg>
@@ -245,6 +245,7 @@ async function handleLogout() {
                             </div>
                             
                             <RouterLink 
+                                v-if="authStore.role === 'admin'"
                                 to="/admin/kpi" 
                                 @click="closeMobileMenu"
                                 class="flex items-center px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
@@ -303,6 +304,7 @@ async function handleLogout() {
                             </RouterLink>
                             
                             <RouterLink 
+                                v-if="authStore.role === 'admin'"
                                 to="/admin/history" 
                                 @click="closeMobileMenu"
                                 class="flex items-center px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"

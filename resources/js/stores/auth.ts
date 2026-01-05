@@ -16,8 +16,8 @@ export const useAuthStore = defineStore('auth', () => {
     const loading = ref(true);
     const router = useRouter();
 
-    const isAdmin = ref(false);
-    const isSetup = ref(true); // Default to true to prevent flicker, checked on load
+    const role = ref<string>('');
+    const currentAdminId = ref<number | null>(null);
 
     async function initializeAuth() {
         loading.value = true;
@@ -27,7 +27,12 @@ export const useAuthStore = defineStore('auth', () => {
         // Check if we have a stored admin session
         const storedAdmin = localStorage.getItem('admin_session');
         if (storedAdmin === 'true') {
+            const storedRole = localStorage.getItem('admin_role');
+            const storedId = localStorage.getItem('admin_id');
+
             isAdmin.value = true;
+            if (storedRole) role.value = storedRole;
+            if (storedId) currentAdminId.value = parseInt(storedId);
         }
 
         loading.value = false;
@@ -57,15 +62,17 @@ export const useAuthStore = defineStore('auth', () => {
 
         const { error } = await supabase
             .from('admin_settings')
-            .insert([{ id: 1, password_hash: hash }]);
+            .insert([{
+                username: 'admin',
+                password_hash: hash,
+                role: 'admin'
+            }]);
 
         if (error) throw error;
 
         isSetup.value = true;
         // Auto login after setup
-        isAdmin.value = true;
-        localStorage.setItem('admin_session', 'true');
-        router.push({ name: 'admin.cars.index' });
+        await loginAdmin('admin', password);
     }
 
     async function login(email: string, password: string) {
@@ -76,30 +83,38 @@ export const useAuthStore = defineStore('auth', () => {
         if (error) throw error;
         user.value = data.user;
         isAdmin.value = false;
+        role.value = '';
+        currentAdminId.value = null;
         router.push('/');
     }
 
     async function loginAdmin(username: string, pass: string) {
-        if (username !== 'admin') {
-            throw new Error('Invalid username');
-        }
-
         const hash = await hashPassword(pass);
 
         const { data, error } = await supabase
             .from('admin_settings')
-            .select('password_hash')
-            .eq('id', 1)
+            .select('id, password_hash, role')
+            .eq('username', username)
             .single();
 
         if (error || !data) {
-            throw new Error('Invalid credentials or system not setup');
+            throw new Error('Invalid credentials');
         }
 
         if (data.password_hash === hash) {
             isAdmin.value = true;
+            role.value = data.role;
+            currentAdminId.value = data.id;
+
             localStorage.setItem('admin_session', 'true');
-            router.push({ name: 'admin.cars.index' });
+            localStorage.setItem('admin_role', data.role);
+            localStorage.setItem('admin_id', data.id.toString());
+
+            if (data.role === 'admin') {
+                router.push({ name: 'admin.kpi.index' }); // Main landing for Admin
+            } else {
+                router.push({ name: 'admin.reservations.index' }); // Main landing for Assistant
+            }
             return true;
         } else {
             throw new Error('Invalid password');
@@ -107,13 +122,15 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function changeAdminPassword(currentPass: string, newPass: string) {
+        if (!currentAdminId.value) throw new Error('Not authenticated');
+
         const currentHash = await hashPassword(currentPass);
 
         // Verify current password first
         const { data, error: fetchError } = await supabase
             .from('admin_settings')
             .select('password_hash')
-            .eq('id', 1)
+            .eq('id', currentAdminId.value)
             .single();
 
         if (fetchError || !data || data.password_hash !== currentHash) {
@@ -125,7 +142,7 @@ export const useAuthStore = defineStore('auth', () => {
         const { error: updateError } = await supabase
             .from('admin_settings')
             .update({ password_hash: newHash, updated_at: new Date().toISOString() })
-            .eq('id', 1);
+            .eq('id', currentAdminId.value);
 
         if (updateError) throw updateError;
     }
@@ -133,7 +150,13 @@ export const useAuthStore = defineStore('auth', () => {
     async function signOut() {
         if (isAdmin.value) {
             isAdmin.value = false;
+            role.value = '';
+            currentAdminId.value = null;
+
             localStorage.removeItem('admin_session');
+            localStorage.removeItem('admin_role');
+            localStorage.removeItem('admin_id');
+
             router.push('/admin');
         } else {
             await supabase.auth.signOut();
@@ -156,6 +179,7 @@ export const useAuthStore = defineStore('auth', () => {
     return {
         user,
         isAdmin,
+        role,
         isSetup,
         loading,
         initializeAuth,
