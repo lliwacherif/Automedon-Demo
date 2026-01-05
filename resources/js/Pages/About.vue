@@ -16,22 +16,6 @@
                 </div>
             </div>
 
-            <!-- About Content -->
-            <div class="bg-white rounded-lg shadow-md p-8 mb-8">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-right">About Us</h2>
-                <div dir="rtl" class="text-right">
-                    <p class="text-gray-600 leading-relaxed mb-6 text-lg">
-                        مرحباً بكم في وكالة <strong>MIAM'S Rent Car</strong> لكراء السيارات في سوسة، تونس.
-                    </p>
-                    <p class="text-gray-600 leading-relaxed text-lg mb-4">
-                        نحن نقدم لكم أفضل الخدمات بأسعار تنافسية وأسطول سيارات حديث ومتنوع يلبي جميع احتياجاتكم.
-                    </p>
-                    <p class="text-gray-600 leading-relaxed text-lg">
-                        استمتعوا بتجربة تأجير سيارات مريحة وموثوقة معنا.
-                    </p>
-                </div>
-            </div>
-
             <!-- New Marketing Section -->
             <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl shadow-xl p-8 md:p-12 text-white overflow-hidden relative">
                 <!-- Decorative background elements -->
@@ -64,31 +48,31 @@
                     <!-- Features Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <!-- Car Feature -->
-                        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 hover:bg-opacity-20 transition-all duration-300 transform hover:-translate-y-1 border border-white border-opacity-20">
+                        <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="text-4xl mb-4">🚘</div>
-                            <h3 class="text-lg font-bold mb-2">Véhicules Premium</h3>
-                            <p class="text-indigo-100 text-sm">Des voitures neuves et confortables</p>
+                            <h3 class="text-lg font-bold mb-2 text-gray-900">Véhicules Premium</h3>
+                            <p class="text-gray-600 text-sm">Des voitures neuves et confortables</p>
                         </div>
 
                         <!-- Price Feature -->
-                        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 hover:bg-opacity-20 transition-all duration-300 transform hover:-translate-y-1 border border-white border-opacity-20">
+                        <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="text-4xl mb-4">💰</div>
-                            <h3 class="text-lg font-bold mb-2">Meilleurs Tarifs</h3>
-                            <p class="text-indigo-100 text-sm">Des tarifs préférentiels pour les réservations anticipées</p>
+                            <h3 class="text-lg font-bold mb-2 text-gray-900">Meilleurs Tarifs</h3>
+                            <p class="text-gray-600 text-sm">Des tarifs préférentiels pour les réservations anticipées</p>
                         </div>
 
                         <!-- Location Feature -->
-                        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 hover:bg-opacity-20 transition-all duration-300 transform hover:-translate-y-1 border border-white border-opacity-20">
+                        <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="text-4xl mb-4">📍</div>
-                            <h3 class="text-lg font-bold mb-2">Flexibilité</h3>
-                            <p class="text-indigo-100 text-sm">Livraison de voitures où que vous soyez</p>
+                            <h3 class="text-lg font-bold mb-2 text-gray-900">Flexibilité</h3>
+                            <p class="text-gray-600 text-sm">Livraison de voitures où que vous soyez</p>
                         </div>
 
                         <!-- Speed Feature -->
-                        <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 hover:bg-opacity-20 transition-all duration-300 transform hover:-translate-y-1 border border-white border-opacity-20">
+                        <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="text-4xl mb-4">⚡</div>
-                            <h3 class="text-lg font-bold mb-2">Rapidité</h3>
-                            <p class="text-indigo-100 text-sm">Un service virtuel rapide et efficace</p>
+                            <h3 class="text-lg font-bold mb-2 text-gray-900">Rapidité</h3>
+                            <p class="text-gray-600 text-sm">Un service virtuel rapide et efficace</p>
                         </div>
                     </div>
 
