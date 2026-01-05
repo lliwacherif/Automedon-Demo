@@ -18,6 +18,8 @@ export const useAuthStore = defineStore('auth', () => {
 
     const role = ref<string>('');
     const currentAdminId = ref<number | null>(null);
+    const isAdmin = ref(false);
+    const isSetup = ref(true);
 
     async function initializeAuth() {
         loading.value = true;
@@ -43,10 +45,10 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function checkAdminSetup() {
-        const { data, error } = await supabase
+        const { data, error } = await (supabase
             .from('admin_settings')
             .select('id')
-            .limit(1);
+            .limit(1) as any);
 
         if (error) {
             console.error('Error checking admin setup:', error);
@@ -60,8 +62,8 @@ export const useAuthStore = defineStore('auth', () => {
     async function setupAdminPassword(password: string) {
         const hash = await hashPassword(password);
 
-        const { error } = await supabase
-            .from('admin_settings')
+        const { error } = await (supabase
+            .from('admin_settings') as any)
             .insert([{
                 username: 'admin',
                 password_hash: hash,
@@ -91,11 +93,11 @@ export const useAuthStore = defineStore('auth', () => {
     async function loginAdmin(username: string, pass: string) {
         const hash = await hashPassword(pass);
 
-        const { data, error } = await supabase
+        const { data, error } = await (supabase
             .from('admin_settings')
             .select('id, password_hash, role')
             .eq('username', username)
-            .single();
+            .single() as any);
 
         if (error || !data) {
             throw new Error('Invalid credentials');
@@ -127,11 +129,11 @@ export const useAuthStore = defineStore('auth', () => {
         const currentHash = await hashPassword(currentPass);
 
         // Verify current password first
-        const { data, error: fetchError } = await supabase
+        const { data, error: fetchError } = await (supabase
             .from('admin_settings')
             .select('password_hash')
             .eq('id', currentAdminId.value)
-            .single();
+            .single() as any);
 
         if (fetchError || !data || data.password_hash !== currentHash) {
             throw new Error('Current password is incorrect');
@@ -139,8 +141,8 @@ export const useAuthStore = defineStore('auth', () => {
 
         const newHash = await hashPassword(newPass);
 
-        const { error: updateError } = await supabase
-            .from('admin_settings')
+        const { error: updateError } = await (supabase
+            .from('admin_settings') as any)
             .update({ password_hash: newHash, updated_at: new Date().toISOString() })
             .eq('id', currentAdminId.value);
 
