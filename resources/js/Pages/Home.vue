@@ -5,7 +5,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 import ReservationModal from '@/components/ReservationModal.vue';
 import CarAvailabilityModal from '@/components/CarAvailabilityModal.vue';
-import { Eye } from 'lucide-vue-next';
+import { Eye, Calendar, Key } from 'lucide-vue-next';
 
 const { cars, loading, fetchCars } = useCars();
 const authStore = useAuthStore();
@@ -163,13 +163,22 @@ const onReservationSuccess = () => {
                             </div>
                             
                             <div class="mt-4">
-                                <button 
-                                    @click="openAvailabilityModal(car)"
-                                    class="w-full flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-                                >
-                                    <Eye class="w-5 h-5 mr-2" />
-                                    Réserver / Disponibilité
-                                </button>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <button 
+                                        @click="openAvailabilityModal(car)"
+                                        class="flex items-center justify-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                                    >
+                                        <Calendar class="w-4 h-4 mr-2" />
+                                        Dispo
+                                    </button>
+                                    <button 
+                                        @click="openBookingModal(car)"
+                                        class="flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                                    >
+                                        <Key class="w-4 h-4 mr-2" />
+                                        Réserver
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
