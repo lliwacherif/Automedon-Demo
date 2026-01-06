@@ -159,7 +159,8 @@ const onReservationSuccess = () => {
                                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900">
                                     {{ car.brand }} {{ car.model }}
                                 </h3>
-                                <p class="text-sm text-gray-500 mt-1">{{ car.plate_number }}</p>
+                                    <!-- Plate number hidden for guests -->
+                                    <!-- <p class="text-sm text-gray-500 mt-1">{{ car.plate_number }}</p> -->
                             </div>
                             
                             <div class="mt-4">

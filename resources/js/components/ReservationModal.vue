@@ -205,7 +205,7 @@ const today = new Date().toISOString().split('T')[0];
                         <div>
                             <h2 class="text-xl font-semibold text-gray-900">Réserver une voiture</h2>
                             <p v-if="car" class="text-sm text-gray-500 mt-1">
-                                {{ car.brand }} {{ car.model }} - {{ car.plate_number }}
+                                {{ car.brand }} {{ car.model }}
                             </p>
                         </div>
                         <button @click="closeModal" class="text-gray-400 hover:text-gray-500">
