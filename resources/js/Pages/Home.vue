@@ -66,11 +66,7 @@ const closeAvailabilityModal = () => {
 };
 
 const openBookingModal = (car: Car) => {
-    if (!authStore.user) {
-        // Redirect to login if not authenticated
-        router.push({ name: 'login', query: { redirect: '/' } });
-        return;
-    }
+    // Auth check removed to allow guest reservations
     selectedCar.value = car;
     showReservationModal.value = true;
 };
@@ -172,7 +168,7 @@ const onReservationSuccess = () => {
                                     class="w-full flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
                                 >
                                     <Eye class="w-5 h-5 mr-2" />
-                                    Voir Plus / Disponibilité
+                                    Réserver / Disponibilité
                                 </button>
                             </div>
                         </div>

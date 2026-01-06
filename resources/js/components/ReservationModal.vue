@@ -15,7 +15,7 @@ const emit = defineEmits<{
     (e: 'success'): void;
 }>();
 
-const { createReservation, loading, error } = useReservations();
+const { createReservation, checkAvailability, loading, error } = useReservations();
 const authStore = useAuthStore();
 
 const form = ref({
@@ -142,9 +142,21 @@ const validateForm = () => {
 const submitReservation = async () => {
     if (!validateForm() || !props.car) return;
 
+    // Check availability first
     try {
+        const isAvailable = await checkAvailability(
+            props.car.id, 
+            form.value.start_date, 
+            form.value.end_date
+        );
+
+        if (!isAvailable) {
+            formError.value = "Date deja reservé choisir un autre date";
+            return;
+        }
+
         await createReservation({
-            user_id: authStore.user?.id || null,
+            user_id: authStore.user?.id || null, // Allow null for guests
             car_id: props.car.id,
             client_name: form.value.client_name,
             client_cin: form.value.client_cin,
@@ -155,7 +167,7 @@ const submitReservation = async () => {
             duration_days: durationDays.value,
             price_per_day: form.value.price_per_day,
             total_price: totalPrice.value,
-            status: 'confirmed', // Force confirmed status
+            status: 'pending', // Set to pending (En Attente) for admin review
             pickup_location: form.value.pickup_location || null,
             return_location: form.value.return_location || null,
             notes: form.value.notes || null,

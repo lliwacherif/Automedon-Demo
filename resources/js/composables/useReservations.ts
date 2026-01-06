@@ -214,6 +214,11 @@ export function useReservations() {
         // start_date <= Request.End AND
         // end_date >= Request.Start
 
+        // NOTE: Supabase Range Queries can be tricky with exact boundaries.
+        // Let's use a robust overlap check logic.
+        // Overlap exists if NOT (End <= Existing.Start OR Start >= Existing.End)
+        // Which translates to: End > Existing.Start AND Start < Existing.End
+
         loading.value = true;
         try {
             let query = supabase
@@ -221,8 +226,9 @@ export function useReservations() {
                 .select('id')
                 .eq('car_id', carId)
                 .in('status', ['confirmed', 'active']) // Only check against confirmed or active reservations
-                .lt('start_date', endDate) // Existing start must be strictly before requested end
-                .gt('end_date', startDate); // Existing end must be strictly after requested start
+                // Overlap logic:
+                .lt('start_date', endDate) // Existing START must be BEFORE requested END
+                .gt('end_date', startDate); // Existing END must be AFTER requested START
 
             if (excludeReservationId) {
                 query = query.neq('id', excludeReservationId);
@@ -232,11 +238,12 @@ export function useReservations() {
 
             if (supabaseError) throw supabaseError;
 
-            // If we found any conflicting reservation, then it's NOT available
+            // If we found any conflicting reservation (data length > 0), then it's NOT available
+            // So return true (available) if length is 0
             return data && data.length === 0;
         } catch (e: any) {
             console.error('Availability check failed:', e);
-            // Default to available in case of error to avoid blocking, but log it
+            // Default to FALSE (not available) in case of error to be safe
             return false;
         } finally {
             loading.value = false;
